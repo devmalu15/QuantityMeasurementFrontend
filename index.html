@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantity Measurement App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header__brand">
+            <span class="header__icon">⚖</span>
+            <span class="header__title">Quantity Measurement</span>
+        </div>
+        <div class="header__user" id="headerUser">
+            <!-- filled by JS after login -->
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════
+         AUTH SCREEN — visible when logged out
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="screenAuth">
+        <div class="auth-wrap">
+
+            <!-- tabs -->
+            <div class="tabs">
+                <button class="tabs__btn tabs__btn--active" id="tabLogin"
+                        onclick="switchTab('login')">Login</button>
+                <button class="tabs__btn" id="tabRegister"
+                        onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- login form -->
+            <form class="form" id="formLogin">
+                <h2 class="form__title">Welcome back</h2>
+
+                <div class="form__group">
+                    <label class="form__label" for="loginEmail">Email</label>
+                    <input class="form__input" type="email" id="loginEmail"
+                           placeholder="you@example.com" autocomplete="email">
+                </div>
+
+                <div class="form__group">
+                    <label class="form__label" for="loginPwd">Password</label>
+                    <input class="form__input" type="password" id="loginPwd"
+                           placeholder="Password" autocomplete="current-password">
+                </div>
+
+                <button class="btn btn--primary btn--block" type="submit">
+                    Login
+                </button>
+
+                <p class="form__msg" id="loginMsg"></p>
+            </form>
+
+            <!-- register form — hidden by default via CSS class -->
+            <form class="form form--hidden" id="formRegister">
+                <h2 class="form__title">Create account</h2>
+
+                <div class="form__group">
+                    <label class="form__label" for="regEmail">Email</label>
+                    <input class="form__input" type="email" id="regEmail"
+                           placeholder="you@example.com" autocomplete="email">
+                </div>
+
+                <div class="form__group">
+                    <label class="form__label" for="regPwd">Password</label>
+                    <input class="form__input" type="password" id="regPwd"
+                           placeholder="Min 6 chars · uppercase · digit · symbol"
+                           autocomplete="new-password">
+                </div>
+
+                <button class="btn btn--primary btn--block" type="submit">
+                    Create account
+                </button>
+
+                <p class="form__msg" id="registerMsg"></p>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         APP SCREEN — visible when logged in
+         Hidden by default via CSS class
+    ══════════════════════════════════════════ -->
+    <div class="screen screen--hidden" id="screenApp">
+
+        <!-- two-column operation cards -->
+        <div class="cards">
+
+            <!-- Card 1: Arithmetic -->
+            <div class="card">
+                <h2 class="card__title">Arithmetic</h2>
+
+                <div class="form__group">
+                    <label class="form__label" for="opType">Operation</label>
+                    <select class="form__input" id="opType">
+                        <option value="add">Add</option>
+                        <option value="subtract">Subtract</option>
+                        <option value="divide">Divide</option>
+                        <option value="compare">Compare</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="form__group">
+                        <label class="form__label" for="val1">Value 1</label>
+                        <input class="form__input" type="number" id="val1"
+                               placeholder="e.g. 1" step="any">
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="unit1">Unit 1</label>
+                        <select class="form__input" id="unit1" onchange="syncUnit2()">
+                            <optgroup label="Length">
+                                <option value="FEET">Feet</option>
+                                <option value="INCHES">Inches</option>
+                                <option value="YARDS">Yards</option>
+                                <option value="CENTIMETERS">Centimeters</option>
+                            </optgroup>
+                            <optgroup label="Weight">
+                                <option value="KILOGRAM">Kilogram</option>
+                                <option value="GRAM">Gram</option>
+                                <option value="POUND">Pound</option>
+                            </optgroup>
+                            <optgroup label="Volume">
+                                <option value="LITRE">Litre</option>
+                                <option value="MILLILITRE">Millilitre</option>
+                                <option value="GALLON">Gallon</option>
+                            </optgroup>
+                            <optgroup label="Temperature">
+                                <option value="CELSIUS">Celsius</option>
+                                <option value="FAHRENHEIT">Fahrenheit</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form__group">
+                        <label class="form__label" for="val2">Value 2</label>
+                        <input class="form__input" type="number" id="val2"
+                               placeholder="e.g. 12" step="any">
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="unit2">Unit 2</label>
+                        <select class="form__input" id="unit2"></select>
+                    </div>
+                </div>
+
+                <button class="btn btn--primary btn--block"
+                        onclick="runOperation()">Execute</button>
+
+                <div class="result result--hidden" id="opResult"></div>
+            </div>
+
+            <!-- Card 2: Convert -->
+            <div class="card">
+                <h2 class="card__title">Convert Unit</h2>
+
+                <div class="row">
+                    <div class="form__group">
+                        <label class="form__label" for="cvtVal">Value</label>
+                        <input class="form__input" type="number" id="cvtVal"
+                               placeholder="e.g. 1" step="any">
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="cvtFrom">From</label>
+                        <select class="form__input" id="cvtFrom">
+                            <optgroup label="Length">
+                                <option value="FEET">Feet</option>
+                                <option value="INCHES">Inches</option>
+                                <option value="YARDS">Yards</option>
+                                <option value="CENTIMETERS">Centimeters</option>
+                            </optgroup>
+                            <optgroup label="Weight">
+                                <option value="KILOGRAM">Kilogram</option>
+                                <option value="GRAM">Gram</option>
+                                <option value="POUND">Pound</option>
+                            </optgroup>
+                            <optgroup label="Volume">
+                                <option value="LITRE">Litre</option>
+                                <option value="MILLILITRE">Millilitre</option>
+                                <option value="GALLON">Gallon</option>
+                            </optgroup>
+                            <optgroup label="Temperature">
+                                <option value="CELSIUS">Celsius</option>
+                                <option value="FAHRENHEIT">Fahrenheit</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form__group">
+                    <label class="form__label" for="cvtTo">To Unit</label>
+                    <select class="form__input" id="cvtTo">
+                        <optgroup label="Length">
+                            <option value="FEET">Feet</option>
+                            <option value="INCHES">Inches</option>
+                            <option value="YARDS">Yards</option>
+                            <option value="CENTIMETERS">Centimeters</option>
+                        </optgroup>
+                        <optgroup label="Weight">
+                            <option value="KILOGRAM">Kilogram</option>
+                            <option value="GRAM">Gram</option>
+                            <option value="POUND">Pound</option>
+                        </optgroup>
+                        <optgroup label="Volume">
+                            <option value="LITRE">Litre</option>
+                            <option value="MILLILITRE">Millilitre</option>
+                            <option value="GALLON">Gallon</option>
+                        </optgroup>
+                        <optgroup label="Temperature">
+                            <option value="CELSIUS">Celsius</option>
+                            <option value="FAHRENHEIT">Fahrenheit</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <button class="btn btn--primary btn--block"
+                        onclick="runConvert()">Convert</button>
+
+                <div class="result result--hidden" id="cvtResult"></div>
+            </div>
+
+        </div><!-- /cards -->
+
+        <!-- History -->
+        <div class="history">
+            <div class="history__head">
+                <h2 class="history__title">Operation History</h2>
+                <div class="history__btns">
+                    <button class="btn btn--secondary"
+                            onclick="loadHistory('redis')">Redis Cache</button>
+                    <button class="btn btn--secondary"
+                            onclick="loadHistory('ef')">Database</button>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Operation</th>
+                            <th>Value 1</th>
+                            <th>Value 2</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="histBody">
+                        <tr>
+                            <td colspan="5" class="table__empty">
+                                Click a history button to load records
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- /screenApp -->
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Quantity Measurement App &copy; 2025 — UC19 Frontend</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

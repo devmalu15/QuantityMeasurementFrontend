@@ -1,0 +1,421 @@
+/* ═══════════════════════════════════════════════════════════════
+   ROOT VARIABLES
+═══════════════════════════════════════════════════════════════ */
+:root {
+    --navy:     #0D2137;
+    --blue:     #1B4F72;
+    --accent:   #2E86C1;
+    --teal:     #0E6655;
+    --bg:       #F2F3F4;
+    --surface:  #FFFFFF;
+    --border:   #D5D8DC;
+    --text:     #1C2833;
+    --muted:    #717D7E;
+    --success:  #1E8449;
+    --error:    #C0392B;
+    --radius:   6px;
+    --shadow:   0 2px 8px rgba(0,0,0,0.10);
+    --font:     'IBM Plex Sans', sans-serif;
+    --mono:     'IBM Plex Mono', monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* THIS IS THE KEY LINE — hides anything with .form--hidden or .screen--hidden */
+.form--hidden,
+.screen--hidden,
+.result--hidden {
+    display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BODY — CSS Grid page layout (header | content | footer)
+═══════════════════════════════════════════════════════════════ */
+body {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER — Flexbox
+═══════════════════════════════════════════════════════════════ */
+.header {
+    background: var(--navy);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+}
+
+.header__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.header__icon {
+    font-size: 1.3rem;
+}
+
+.header__title {
+    color: white;
+}
+
+.header__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.875rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCREENS — only one visible at a time
+   .screen--hidden added/removed by JS
+═══════════════════════════════════════════════════════════════ */
+.screen {
+    padding: 2rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTH SCREEN — Flexbox centering
+═══════════════════════════════════════════════════════════════ */
+#screenAuth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 56px - 40px);
+}
+
+.auth-wrap {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TABS — Float layout
+═══════════════════════════════════════════════════════════════ */
+.tabs {
+    overflow: hidden;           /* clearfix — contains floated children */
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 1.5rem;
+}
+
+.tabs__btn {
+    float: left;                /* FLOAT — classic horizontal tab layout */
+    width: 50%;
+    padding: 0.6rem 0;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: var(--font);
+    color: var(--muted);
+    text-align: center;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+/* Pseudo-class :hover */
+.tabs__btn:hover {
+    color: var(--accent);
+}
+
+/* Active tab — compound class selector */
+.tabs__btn--active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FORMS
+═══════════════════════════════════════════════════════════════ */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.25rem;
+}
+
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form__input {
+    padding: 0.5rem 0.75rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-family: var(--font);
+    background: white;
+    color: var(--text);
+    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+/* Pseudo-class :focus */
+.form__input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46,134,193,0.15);
+}
+
+/* Pseudo-element ::placeholder */
+.form__input::placeholder {
+    color: #AAAAAA;
+    font-size: 0.875rem;
+}
+
+.form__msg {
+    font-size: 0.875rem;
+    text-align: center;
+    min-height: 1.2rem;
+    font-weight: 500;
+}
+
+.form__msg--success { color: var(--success); }
+.form__msg--error   { color: var(--error);   }
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════════════════════ */
+.btn {
+    padding: 0.5rem 1.1rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, opacity 0.15s;
+    white-space: nowrap;
+}
+
+/* Pseudo-class :active */
+.btn:active  { transform: scale(0.97); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn--primary { background: var(--accent); color: white; }
+.btn--primary:hover { background: var(--blue); }
+
+.btn--secondary { background: var(--teal); color: white; font-size: 0.85rem; }
+.btn--secondary:hover { background: #0a5244; }
+
+.btn--ghost {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.45);
+    color: white;
+    font-size: 0.85rem;
+}
+.btn--ghost:hover { background: rgba(255,255,255,0.12); }
+
+.btn--block { width: 100%; }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP SCREEN — operation cards + history
+═══════════════════════════════════════════════════════════════ */
+#screenApp {
+    max-width: 1060px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* CSS GRID — two cards side by side */
+.cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════════════════ */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-top: 3px solid var(--accent);
+}
+
+.card__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Two columns inside a card for value+unit pairs */
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESULT BOX
+═══════════════════════════════════════════════════════════════ */
+.result {
+    background: #EAF4FB;
+    border: 1.5px solid #AED6F1;
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.result--error {
+    background: #FDEDEC;
+    border-color: #F1948A;
+    border-left-color: var(--error);
+    color: var(--error);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════════════════════════ */
+.history {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+}
+
+/* Flexbox — head row */
+.history__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.history__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history__btns {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.table-wrap { overflow-x: auto; }
+
+/* ═══════════════════════════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════════════════════════ */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+/* Complex selector — descendent */
+.table th,
+.table td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Child combinator */
+.table thead > tr > th {
+    background: var(--navy);
+    color: white;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Pseudo-class :nth-child — zebra rows */
+.table tbody tr:nth-child(even) {
+    background: var(--bg);
+}
+
+/* Pseudo-class :hover on rows */
+.table tbody tr:hover {
+    background: #D6EAF8;
+}
+
+.table__empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 2rem !important;
+    font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════ */
+.footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 0.8rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MEDIA QUERY — single column below 700px
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+    .screen        { padding: 1rem; }
+    .cards         { grid-template-columns: 1fr; }
+    .row           { grid-template-columns: 1fr; }
+    .history__head { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .header        { padding: 0 1rem; }
+}
