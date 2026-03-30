@@ -1,0 +1,165 @@
+ 
+<div class="dashboard animate-fade">
+ 
+  <!-- ── OPERATION CARDS ─────────────────────── -->
+  <div class="dash-grid">
+    <!-- Arithmetic Card -->
+    <div class="card animate-left delay-1">
+      <h2 class="card-title">
+        <span class="card-title__icon">🔢</span> Arithmetic
+      </h2>
+ 
+      <div class="field">
+        <label class="field__label">Operation</label>
+        <select class="field__select" [(ngModel)]="opType">
+          <option value="add">Add</option>
+          <option value="subtract">Subtract</option>
+          <option value="divide">Divide</option>
+          <option value="compare">Compare</option>
+        </select>
+      </div>
+ 
+      <div class="two-col">
+        <div class="field">
+          <label class="field__label">Value 1</label>
+          <input class="field__input" type="number" [(ngModel)]="val1"
+                 placeholder="e.g. 1" step="any">
+        </div>
+        <div class="field">
+          <label class="field__label">Unit 1</label>
+          <select class="field__select" [(ngModel)]="unit1" (change)="syncUnit2()">
+            <ng-container *ngFor="let group of unitGroups | keyvalue">
+              <optgroup [label]="group.key">
+                <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
+              </optgroup>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+ 
+      <div class="two-col">
+        <div class="field">
+          <label class="field__label">Value 2</label>
+          <input class="field__input" type="number" [(ngModel)]="val2"
+                 placeholder="e.g. 12" step="any">
+        </div>
+        <div class="field">
+          <label class="field__label">Unit 2</label>
+          <select class="field__select" [(ngModel)]="unit2">
+            <option *ngFor="let u of unit2Options" [value]="u">{{ toLabel(u) }}</option>
+          </select>
+        </div>
+      </div>
+ 
+      <button class="btn btn--primary btn--block"
+              (click)="runOperation()"
+              [class.btn--loading]="opLoading"
+              [disabled]="opLoading">
+        <span class="btn-spinner" *ngIf="opLoading"></span>
+        <span *ngIf="!opLoading">Execute</span>
+      </button>
+ 
+      <div class="result-box result-box--success" *ngIf="opResult">{{ opResult }}</div>
+      <div class="result-box result-box--error"   *ngIf="opError">{{ opError }}</div>
+    </div>
+ 
+    <!-- Convert Card -->
+    <div class="card animate-right delay-1">
+      <h2 class="card-title">
+        <span class="card-title__icon">🔄</span> Convert Unit
+      </h2>
+ 
+      <div class="two-col">
+        <div class="field">
+          <label class="field__label">Value</label>
+          <input class="field__input" type="number" [(ngModel)]="cvtVal"
+                 placeholder="e.g. 1" step="any">
+        </div>
+        <div class="field">
+          <label class="field__label">From</label>
+          <select class="field__select" [(ngModel)]="cvtFrom">
+            <ng-container *ngFor="let group of unitGroups | keyvalue">
+              <optgroup [label]="group.key">
+                <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
+              </optgroup>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+ 
+      <div class="field">
+        <label class="field__label">To Unit</label>
+        <select class="field__select" [(ngModel)]="cvtTo">
+          <ng-container *ngFor="let group of unitGroups | keyvalue">
+            <optgroup [label]="group.key">
+              <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
+            </optgroup>
+          </ng-container>
+        </select>
+      </div>
+ 
+      <button class="btn btn--primary btn--block"
+              (click)="runConvert()"
+              [class.btn--loading]="cvtLoading"
+              [disabled]="cvtLoading">
+        <span class="btn-spinner" *ngIf="cvtLoading"></span>
+        <span *ngIf="!cvtLoading">Convert</span>
+      </button>
+ 
+      <div class="result-box result-box--success" *ngIf="cvtResult">{{ cvtResult }}</div>
+      <div class="result-box result-box--error"   *ngIf="cvtError">{{ cvtError }}</div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ── HISTORY ──────────────────────────────── -->
+  <div class="card animate-fade delay-2">
+    <div class="history-head">
+      <h2 class="card-title">
+        <span class="card-title__icon">📋</span> Operation History
+      </h2>
+      <div class="history-btns">
+        <button class="btn btn--secondary" (click)="loadHistory('redis')"
+                [class.active]="historyType === 'redis'">
+          Redis Cache
+        </button>
+        <button class="btn btn--secondary" (click)="loadHistory('ef')"
+                [class.active]="historyType === 'ef'">
+          Database
+        </button>
+      </div>
+    </div>
+ 
+    <div class="spinner" *ngIf="historyLoading"></div>
+ 
+    <div class="table-wrap" *ngIf="!historyLoading">
+      <p class="empty-msg" *ngIf="history.length === 0 && !historyError && !historyType">
+        Click a history button to load records
+      </p>
+      <p class="error-msg" *ngIf="historyError">{{ historyError }}</p>
+      <p class="empty-msg" *ngIf="history.length === 0 && historyType && !historyError">
+        No records found
+      </p>
+ 
+      <table class="data-table" *ngIf="history.length > 0">
+        <thead>
+          <tr>
+            <th>#</th><th>Operation</th>
+            <th>Value 1</th><th>Value 2</th><th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of history; let i = index"
+              [class.row-even]="i % 2 === 0">
+            <td>{{ i + 1 }}</td>
+            <td><span class="op-badge">{{ item.operation }}</span></td>
+            <td>{{ item.operand1 }}</td>
+            <td>{{ item.operand2 }}</td>
+            <td class="result-cell">{{ item.result }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+</div>

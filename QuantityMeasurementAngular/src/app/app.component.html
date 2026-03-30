@@ -1,0 +1,24 @@
+ 
+<div class="app-shell">
+  <header class="app-header">
+    <div class="app-header__brand">
+      <span class="app-header__icon">⚖</span>
+      <span class="app-header__title">Quantity Measurement</span>
+    </div>
+ 
+    <!-- Conditional rendering — only shown when logged in -->
+    <nav class="app-header__nav" *ngIf="auth.isLoggedIn">
+      <span class="app-header__email">{{ auth.email }}</span>
+      <button class="btn btn--ghost" (click)="logout()">Logout</button>
+    </nav>
+  </header>
+ 
+  <!-- Router outlet — Auth or Dashboard renders here -->
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+ 
+  <footer class="app-footer">
+    <p>Quantity Measurement App &copy; 2025 — UC20 Angular</p>
+  </footer>
+</div>

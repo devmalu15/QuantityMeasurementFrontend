@@ -1,0 +1,98 @@
+ 
+<div class="auth-page animate-fade">
+  <div class="auth-card">
+ 
+    <!-- Logo area -->
+    <div class="auth-card__logo">
+      <span class="auth-card__emoji">⚖</span>
+      <h1 class="auth-card__brand">Quantity Measurement</h1>
+    </div>
+ 
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab"
+              [class.auth-tab--active]="activeTab === 'login'"
+              (click)="switchTab('login')">Login</button>
+      <button class="auth-tab"
+              [class.auth-tab--active]="activeTab === 'register'"
+              (click)="switchTab('register')">Register</button>
+    </div>
+ 
+    <!-- LOGIN FORM — conditional rendering -->
+    <form *ngIf="activeTab === 'login'" #loginForm="ngForm"
+          class="auth-form animate-fade" (ngSubmit)="onLogin(loginForm)" novalidate>
+ 
+      <h2 class="auth-form__title">Welcome back 👋</h2>
+ 
+      <div class="field">
+        <label class="field__label">Email</label>
+        <input class="field__input" type="email" name="email"
+               [(ngModel)]="loginData.email"
+               placeholder="you@example.com"
+               required email #emailRef="ngModel">
+        <span class="field__error" *ngIf="emailRef.invalid && emailRef.touched">
+          Valid email required
+        </span>
+      </div>
+ 
+      <div class="field">
+        <label class="field__label">Password</label>
+        <input class="field__input" type="password" name="password"
+               [(ngModel)]="loginData.password"
+               placeholder="Password"
+               required minlength="6" #pwdRef="ngModel">
+        <span class="field__error" *ngIf="pwdRef.invalid && pwdRef.touched">
+          Password required
+        </span>
+      </div>
+ 
+      <button class="btn btn--primary btn--block"
+              type="submit" [class.btn--loading]="isLoading" [disabled]="isLoading">
+        <span class="btn-spinner" *ngIf="isLoading"></span>
+        <span *ngIf="!isLoading">Login</span>
+      </button>
+ 
+      <p class="auth-form__error"   *ngIf="errorMsg">{{ errorMsg }}</p>
+    </form>
+ 
+    <!-- REGISTER FORM -->
+    <form *ngIf="activeTab === 'register'" #regForm="ngForm"
+          class="auth-form animate-fade" (ngSubmit)="onRegister(regForm)" novalidate>
+ 
+      <h2 class="auth-form__title">Create account ✨</h2>
+ 
+      <div class="field">
+        <label class="field__label">Email</label>
+        <input class="field__input" type="email" name="email"
+               [(ngModel)]="registerData.email"
+               placeholder="you@example.com"
+               required email #regEmailRef="ngModel">
+        <span class="field__error" *ngIf="regEmailRef.invalid && regEmailRef.touched">
+          Valid email required
+        </span>
+      </div>
+ 
+      <div class="field">
+        <label class="field__label">Password</label>
+        <input class="field__input" type="password" name="password"
+               [(ngModel)]="registerData.password"
+               placeholder="Min 6 chars · uppercase · digit · symbol"
+               required minlength="6" #regPwdRef="ngModel">
+        <span class="field__error" *ngIf="regPwdRef.invalid && regPwdRef.touched">
+          Min 6 characters required
+        </span>
+      </div>
+ 
+      <button class="btn btn--primary btn--block"
+              type="submit" [class.btn--loading]="isLoading" [disabled]="isLoading">
+        <span class="btn-spinner" *ngIf="isLoading"></span>
+        <span *ngIf="!isLoading">Create account</span>
+      </button>
+ 
+      <p class="auth-form__success" *ngIf="successMsg">{{ successMsg }}</p>
+      <p class="auth-form__error"   *ngIf="errorMsg">{{ errorMsg }}</p>
+    </form>
+ 
+  </div>
+</div>
+
