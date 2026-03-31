@@ -1,15 +1,10 @@
  
 <div class="auth-page animate-fade">
-  <section class="auth-hero animate-left">
-    <p class="section-eyebrow">Access</p>
-    <h1>Quantity Measurement</h1>
-  </section>
-
-  <div class="auth-card animate-right">
+  <div class="auth-card animate-fade">
     <div class="auth-card__logo">
       <span class="auth-card__emoji">⚖</span>
       <h1 class="auth-card__brand">Quantity Measurement</h1>
-      <p class="auth-card__subtitle">Login / Register</p>
+      <p class="auth-card__subtitle">Access</p>
     </div>
 
     <div class="auth-tabs">
@@ -23,9 +18,7 @@
 
     <form *ngIf="activeTab === 'login'" #loginForm="ngForm"
           class="auth-form animate-fade" (ngSubmit)="onLogin(loginForm)" novalidate>
-      <div class="auth-form__intro">
-        <h2 class="auth-form__title">Welcome back</h2>
-      </div>
+      <h2 class="auth-form__title">Login</h2>
 
       <div class="field">
         <label class="field__label" for="login-email">Email</label>
@@ -60,9 +53,7 @@
 
     <form *ngIf="activeTab === 'register'" #regForm="ngForm"
           class="auth-form animate-fade" (ngSubmit)="onRegister(regForm)" novalidate>
-      <div class="auth-form__intro">
-        <h2 class="auth-form__title">Create account</h2>
-      </div>
+      <h2 class="auth-form__title">Register</h2>
 
       <div class="field">
         <label class="field__label" for="register-email">Email</label>
@@ -79,7 +70,7 @@
         <label class="field__label" for="register-password">Password</label>
         <input id="register-password" class="field__input" type="password" name="password"
                [(ngModel)]="registerData.password"
-               placeholder="Min 6 chars · uppercase · digit · symbol"
+               placeholder="Min 6 chars"
                required minlength="6" #regPwdRef="ngModel">
         <span class="field__error" *ngIf="regPwdRef.invalid && regPwdRef.touched">
           Min 6 characters required
