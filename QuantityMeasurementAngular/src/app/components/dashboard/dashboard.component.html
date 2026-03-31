@@ -1,226 +1,220 @@
  
 <div class="dashboard animate-fade">
-  <section class="dashboard-bar card">
-    <div>
-      <h1 class="dashboard-bar__title">Measurement Dashboard</h1>
-      <span class="dashboard-bar__meta">{{ groupCount }} groups · {{ totalUnitCount }} units</span>
-    </div>
-    <span class="status-pill">{{ activeHistoryLabel }}</span>
-  </section>
-
-  <div class="dashboard-layout">
-    <div class="dashboard-stack">
-      <section class="card tool-card animate-left delay-1">
-        <div class="card-head">
+  <div class="dash-grid">
+    <section class="card tool-card animate-left delay-1">
+      <div class="card-head">
+        <div>
           <h2 class="card-title">
             <span class="card-title__icon">🔢</span> Operations
           </h2>
-          <span class="status-pill">{{ formatOperation(opType) }}</span>
         </div>
+        <span class="status-pill">{{ formatOperation(opType) }}</span>
+      </div>
 
+      <div class="field">
+        <label class="field__label" for="opType">Operation</label>
+        <select id="opType" class="field__select" [(ngModel)]="opType">
+          <option value="add">Add</option>
+          <option value="subtract">Subtract</option>
+          <option value="divide">Divide</option>
+          <option value="compare">Compare</option>
+        </select>
+      </div>
+
+      <div class="two-col">
         <div class="field">
-          <label class="field__label" for="opType">Operation</label>
-          <select id="opType" class="field__select" [(ngModel)]="opType">
-            <option value="add">Add</option>
-            <option value="subtract">Subtract</option>
-            <option value="divide">Divide</option>
-            <option value="compare">Compare</option>
+          <label class="field__label" for="val1">Value 1</label>
+          <input id="val1" class="field__input" type="number" [(ngModel)]="val1"
+                 placeholder="e.g. 1" step="any">
+        </div>
+        <div class="field">
+          <label class="field__label" for="unit1">Unit 1</label>
+          <select id="unit1" class="field__select" [(ngModel)]="unit1" (change)="syncUnit2()">
+            <ng-container *ngFor="let group of unitGroups | keyvalue">
+              <optgroup [label]="group.key">
+                <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
+              </optgroup>
+            </ng-container>
           </select>
         </div>
+      </div>
 
-        <div class="two-col">
-          <div class="field">
-            <label class="field__label" for="val1">Value 1</label>
-            <input id="val1" class="field__input" type="number" [(ngModel)]="val1"
-                   placeholder="e.g. 1" step="any">
-          </div>
-          <div class="field">
-            <label class="field__label" for="unit1">Unit 1</label>
-            <select id="unit1" class="field__select" [(ngModel)]="unit1" (change)="syncUnit2()">
-              <ng-container *ngFor="let group of unitGroups | keyvalue">
-                <optgroup [label]="group.key">
-                  <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
-                </optgroup>
-              </ng-container>
-            </select>
-          </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="field__label" for="val2">Value 2</label>
+          <input id="val2" class="field__input" type="number" [(ngModel)]="val2"
+                 placeholder="e.g. 12" step="any">
         </div>
-
-        <div class="two-col">
-          <div class="field">
-            <label class="field__label" for="val2">Value 2</label>
-            <input id="val2" class="field__input" type="number" [(ngModel)]="val2"
-                   placeholder="e.g. 12" step="any">
-          </div>
-          <div class="field">
-            <label class="field__label" for="unit2">Unit 2</label>
-            <select id="unit2" class="field__select" [(ngModel)]="unit2">
-              <option *ngFor="let u of unit2Options" [value]="u">{{ toLabel(u) }}</option>
-            </select>
-          </div>
+        <div class="field">
+          <label class="field__label" for="unit2">Unit 2</label>
+          <select id="unit2" class="field__select" [(ngModel)]="unit2">
+            <option *ngFor="let u of unit2Options" [value]="u">{{ toLabel(u) }}</option>
+          </select>
         </div>
+      </div>
 
-        <div class="context-strip">
-          <span>Family</span>
-          <strong>{{ currentFamily }}</strong>
-        </div>
+      <div class="context-strip">
+        <span>Family</span>
+        <strong>{{ currentFamily }}</strong>
+      </div>
 
-        <button class="btn btn--primary btn--block"
-                (click)="runOperation()"
-                [class.btn--loading]="opLoading"
-                [disabled]="opLoading">
-          <span class="btn-spinner" *ngIf="opLoading"></span>
-          <span *ngIf="!opLoading">Run</span>
-        </button>
+      <button class="btn btn--primary btn--block"
+              (click)="runOperation()"
+              [class.btn--loading]="opLoading"
+              [disabled]="opLoading">
+        <span class="btn-spinner" *ngIf="opLoading"></span>
+        <span *ngIf="!opLoading">Run</span>
+      </button>
 
-        <div class="result-stack" *ngIf="opResult || opError">
-          <div class="result-box result-box--success" *ngIf="opResult">{{ opResult }}</div>
-          <div class="result-box result-box--error" *ngIf="opError">{{ opError }}</div>
-        </div>
-      </section>
+      <div class="result-stack" *ngIf="opResult || opError">
+        <div class="result-box result-box--success" *ngIf="opResult">{{ opResult }}</div>
+        <div class="result-box result-box--error" *ngIf="opError">{{ opError }}</div>
+      </div>
+    </section>
 
-      <section class="card tool-card animate-right delay-1">
-        <div class="card-head">
+    <section class="card tool-card animate-right delay-1">
+      <div class="card-head">
+        <div>
           <h2 class="card-title">
             <span class="card-title__icon">🔄</span> Conversion
           </h2>
-          <span class="status-pill status-pill--alt">{{ currentConversionFamily }}</span>
         </div>
+        <span class="status-pill status-pill--alt">{{ currentConversionFamily }}</span>
+      </div>
 
-        <div class="two-col">
-          <div class="field">
-            <label class="field__label" for="cvtVal">Value</label>
-            <input id="cvtVal" class="field__input" type="number" [(ngModel)]="cvtVal"
-                   placeholder="e.g. 1" step="any">
-          </div>
-          <div class="field">
-            <label class="field__label" for="cvtFrom">From</label>
-            <select id="cvtFrom" class="field__select" [(ngModel)]="cvtFrom" (change)="syncConversionUnits()">
-              <ng-container *ngFor="let group of unitGroups | keyvalue">
-                <optgroup [label]="group.key">
-                  <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
-                </optgroup>
-              </ng-container>
-            </select>
-          </div>
-        </div>
-
+      <div class="two-col">
         <div class="field">
-          <label class="field__label" for="cvtTo">To</label>
-          <select id="cvtTo" class="field__select" [(ngModel)]="cvtTo">
-            <option *ngFor="let u of cvtToOptions" [value]="u">{{ toLabel(u) }}</option>
+          <label class="field__label" for="cvtVal">Value</label>
+          <input id="cvtVal" class="field__input" type="number" [(ngModel)]="cvtVal"
+                 placeholder="e.g. 1" step="any">
+        </div>
+        <div class="field">
+          <label class="field__label" for="cvtFrom">From</label>
+          <select id="cvtFrom" class="field__select" [(ngModel)]="cvtFrom" (change)="syncConversionUnits()">
+            <ng-container *ngFor="let group of unitGroups | keyvalue">
+              <optgroup [label]="group.key">
+                <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
+              </optgroup>
+            </ng-container>
           </select>
-        </div>
-
-        <div class="context-strip">
-          <span>Family</span>
-          <strong>{{ currentConversionFamily }}</strong>
-        </div>
-
-        <button class="btn btn--primary btn--block"
-                (click)="runConvert()"
-                [class.btn--loading]="cvtLoading"
-                [disabled]="cvtLoading">
-          <span class="btn-spinner" *ngIf="cvtLoading"></span>
-          <span *ngIf="!cvtLoading">Convert</span>
-        </button>
-
-        <div class="result-stack" *ngIf="cvtResult || cvtError">
-          <div class="result-box result-box--success" *ngIf="cvtResult">{{ cvtResult }}</div>
-          <div class="result-box result-box--error" *ngIf="cvtError">{{ cvtError }}</div>
-        </div>
-      </section>
-    </div>
-
-    <section class="card history-card animate-fade delay-2">
-      <div class="history-head">
-        <h2 class="card-title">
-          <span class="card-title__icon">📋</span> History
-        </h2>
-
-        <div class="history-btns">
-          <button class="btn btn--secondary" (click)="loadHistory('redis')"
-                  [class.active]="historyType === 'redis'">
-            Cache
-          </button>
-          <button class="btn btn--secondary" (click)="loadHistory('ef')"
-                  [class.active]="historyType === 'ef'">
-            Database
-          </button>
         </div>
       </div>
 
-      <div class="spinner" *ngIf="historyLoading"></div>
+      <div class="field">
+        <label class="field__label" for="cvtTo">To</label>
+        <select id="cvtTo" class="field__select" [(ngModel)]="cvtTo">
+          <option *ngFor="let u of cvtToOptions" [value]="u">{{ toLabel(u) }}</option>
+        </select>
+      </div>
 
-      <div class="table-wrap" *ngIf="!historyLoading">
-        <p class="empty-msg" *ngIf="history.length === 0 && !historyError && !historyType">
-          Select a source.
-        </p>
-        <p class="error-msg" *ngIf="historyError">{{ historyError }}</p>
-        <p class="empty-msg" *ngIf="history.length === 0 && historyType && !historyError">
-          No records found.
-        </p>
+      <div class="context-strip">
+        <span>Family</span>
+        <strong>{{ currentConversionFamily }}</strong>
+      </div>
 
-        <div class="history-summary" *ngIf="history.length > 0">
-          <article class="summary-tile">
-            <span>Records</span>
-            <strong>{{ history.length }}</strong>
-          </article>
-          <article class="summary-tile">
-            <span>Source</span>
-            <strong>{{ activeHistoryLabel }}</strong>
-          </article>
-          <article class="summary-tile">
-            <span>Latest</span>
-            <strong>{{ formatOperation(history[0].operation) }}</strong>
-          </article>
-        </div>
+      <button class="btn btn--primary btn--block"
+              (click)="runConvert()"
+              [class.btn--loading]="cvtLoading"
+              [disabled]="cvtLoading">
+        <span class="btn-spinner" *ngIf="cvtLoading"></span>
+        <span *ngIf="!cvtLoading">Convert</span>
+      </button>
 
-        <div class="history-list" *ngIf="history.length > 0">
-          <article class="history-item" *ngFor="let item of history; let i = index">
-            <div class="history-item__top">
-              <span class="history-item__index">#{{ i + 1 }}</span>
-              <span class="op-badge">{{ formatOperation(item.operation) }}</span>
-            </div>
-
-            <div class="history-item__grid">
-              <div>
-                <span>Value 1</span>
-                <strong>{{ item.operand1 }}</strong>
-              </div>
-              <div>
-                <span>Value 2</span>
-                <strong>{{ item.operand2 }}</strong>
-              </div>
-              <div class="history-item__result">
-                <span>Result</span>
-                <strong>{{ item.result }}</strong>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <table class="data-table" *ngIf="history.length > 0">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Operation</th>
-              <th>Value 1</th>
-              <th>Value 2</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of history; let i = index" [class.row-even]="i % 2 === 0">
-              <td>{{ i + 1 }}</td>
-              <td><span class="op-badge">{{ formatOperation(item.operation) }}</span></td>
-              <td>{{ item.operand1 }}</td>
-              <td>{{ item.operand2 }}</td>
-              <td class="result-cell">{{ item.result }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="result-stack" *ngIf="cvtResult || cvtError">
+        <div class="result-box result-box--success" *ngIf="cvtResult">{{ cvtResult }}</div>
+        <div class="result-box result-box--error" *ngIf="cvtError">{{ cvtError }}</div>
       </div>
     </section>
   </div>
+
+  <section class="card history-card animate-fade delay-2">
+    <div class="history-head">
+      <h2 class="card-title">
+        <span class="card-title__icon">📋</span> History
+      </h2>
+
+      <div class="history-btns">
+        <button class="btn btn--secondary" (click)="loadHistory('redis')"
+                [class.active]="historyType === 'redis'">
+          Cache
+        </button>
+        <button class="btn btn--secondary" (click)="loadHistory('ef')"
+                [class.active]="historyType === 'ef'">
+          Database
+        </button>
+      </div>
+    </div>
+
+    <div class="spinner" *ngIf="historyLoading"></div>
+
+    <div class="table-wrap" *ngIf="!historyLoading">
+      <p class="empty-msg" *ngIf="history.length === 0 && !historyError && !historyType">
+        Select a source.
+      </p>
+      <p class="error-msg" *ngIf="historyError">{{ historyError }}</p>
+      <p class="empty-msg" *ngIf="history.length === 0 && historyType && !historyError">
+        No records found.
+      </p>
+
+      <div class="history-summary" *ngIf="history.length > 0">
+        <article class="summary-tile">
+          <span>Records</span>
+          <strong>{{ history.length }}</strong>
+        </article>
+        <article class="summary-tile">
+          <span>Source</span>
+          <strong>{{ activeHistoryLabel }}</strong>
+        </article>
+        <article class="summary-tile">
+          <span>Latest</span>
+          <strong>{{ formatOperation(history[0].operation) }}</strong>
+        </article>
+      </div>
+
+      <div class="history-list" *ngIf="history.length > 0">
+        <article class="history-item" *ngFor="let item of history; let i = index">
+          <div class="history-item__top">
+            <span class="history-item__index">#{{ i + 1 }}</span>
+            <span class="op-badge">{{ formatOperation(item.operation) }}</span>
+          </div>
+
+          <div class="history-item__grid">
+            <div>
+              <span>Value 1</span>
+              <strong>{{ item.operand1 }}</strong>
+            </div>
+            <div>
+              <span>Value 2</span>
+              <strong>{{ item.operand2 }}</strong>
+            </div>
+            <div class="history-item__result">
+              <span>Result</span>
+              <strong>{{ item.result }}</strong>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <table class="data-table" *ngIf="history.length > 0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Operation</th>
+            <th>Value 1</th>
+            <th>Value 2</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of history; let i = index" [class.row-even]="i % 2 === 0">
+            <td>{{ i + 1 }}</td>
+            <td><span class="op-badge">{{ formatOperation(item.operation) }}</span></td>
+            <td>{{ item.operand1 }}</td>
+            <td>{{ item.operand2 }}</td>
+            <td class="result-cell">{{ item.result }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>

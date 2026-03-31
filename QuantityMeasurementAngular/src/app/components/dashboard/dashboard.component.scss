@@ -1,44 +1,15 @@
  
 .dashboard {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.dashboard-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  border-radius: 0;
-  background: linear-gradient(135deg, #050505 0%, #0b1220 100%);
-}
-
-.dashboard-bar__title {
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-}
-
-.dashboard-bar__meta {
-  display: inline-block;
-  margin-top: 0.2rem;
-  color: #93c5fd;
-  font-size: 0.82rem;
-}
-
-.dashboard-layout {
+.dash-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
-  gap: 1rem;
-  align-items: start;
-}
-
-.dashboard-stack {
-  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -307,7 +278,7 @@
 }
 
 @media (max-width: 980px) {
-  .dashboard-layout {
+  .dash-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -321,8 +292,7 @@
 
   .history-head,
   .card-head,
-  .context-strip,
-  .dashboard-bar {
+  .context-strip {
     flex-direction: column;
     align-items: flex-start;
   }
