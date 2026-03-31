@@ -3,17 +3,10 @@
   <header class="app-header">
     <div class="app-header__brand">
       <div class="app-header__logo">⚖</div>
-      <div>
-        <span class="app-header__eyebrow">Quantity Measurement</span>
-        <span class="app-header__title">Measurement Dashboard</span>
-      </div>
+      <span class="app-header__title">Quantity Measurement</span>
     </div>
 
     <nav class="app-header__nav">
-      <p class="app-header__message" *ngIf="!auth.isLoggedIn">
-        Convert, compare, and track units.
-      </p>
-
       <ng-container *ngIf="auth.isLoggedIn">
         <div class="app-header__user">
           <span class="app-header__status"></span>

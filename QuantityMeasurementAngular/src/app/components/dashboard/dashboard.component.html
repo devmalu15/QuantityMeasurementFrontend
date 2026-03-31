@@ -1,36 +1,5 @@
  
 <div class="dashboard animate-fade">
-  <section class="dashboard-hero card">
-    <div class="dashboard-hero__copy">
-      <p class="section-eyebrow">Quantity tools</p>
-      <h1>Work with measurements in one focused dashboard.</h1>
-      <p>
-        Add, compare, convert, and review saved results without extra filler or clutter.
-      </p>
-
-      <div class="dashboard-hero__chips">
-        <span class="badge">Operations</span>
-        <span class="badge">Conversions</span>
-        <span class="badge">History</span>
-      </div>
-    </div>
-
-    <div class="dashboard-hero__stats">
-      <article class="stat-card">
-        <span class="stat-card__label">Unit groups</span>
-        <strong>{{ groupCount }}</strong>
-      </article>
-      <article class="stat-card">
-        <span class="stat-card__label">Supported units</span>
-        <strong>{{ totalUnitCount }}</strong>
-      </article>
-      <article class="stat-card">
-        <span class="stat-card__label">History source</span>
-        <strong>{{ activeHistoryLabel }}</strong>
-      </article>
-    </div>
-  </section>
-
   <div class="dash-grid">
     <section class="card tool-card animate-left delay-1">
       <div class="card-head">
@@ -42,8 +11,6 @@
         </div>
         <span class="status-pill">{{ formatOperation(opType) }}</span>
       </div>
-
-      <p class="card-copy">{{ operationHelperText }}</p>
 
       <div class="field">
         <label class="field__label" for="opType">Operation</label>
@@ -117,8 +84,6 @@
         <span class="status-pill status-pill--alt">{{ currentConversionFamily }}</span>
       </div>
 
-      <p class="card-copy">{{ conversionHelperText }}</p>
-
       <div class="two-col">
         <div class="field">
           <label class="field__label" for="cvtVal">Value</label>
@@ -169,11 +134,8 @@
       <div>
         <p class="section-eyebrow">Saved history</p>
         <h2 class="card-title">
-          <span class="card-title__icon">📋</span> Operation History
+          <span class="card-title__icon">📋</span> History
         </h2>
-        <p class="history-intro">
-          Load saved measurement records from cache or database and review them on any screen size.
-        </p>
       </div>
 
       <div class="history-btns">

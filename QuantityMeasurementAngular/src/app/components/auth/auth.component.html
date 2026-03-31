@@ -1,44 +1,15 @@
  
 <div class="auth-page animate-fade">
   <section class="auth-hero animate-left">
-    <p class="section-eyebrow">Quantity Measurement</p>
-    <h1>Sign in to use the measurement dashboard.</h1>
-    <p class="auth-hero__text">
-      Access unit operations, conversions, and saved history in one responsive workspace.
-    </p>
-
-    <div class="auth-hero__highlights">
-      <article class="highlight-card">
-        <span>➕</span>
-        <div>
-          <strong>Operations</strong>
-          <p>Add, subtract, divide, and compare matched quantities.</p>
-        </div>
-      </article>
-
-      <article class="highlight-card">
-        <span>🔄</span>
-        <div>
-          <strong>Conversion</strong>
-          <p>Convert units within the same family with clear validation.</p>
-        </div>
-      </article>
-
-      <article class="highlight-card">
-        <span>🗂</span>
-        <div>
-          <strong>History</strong>
-          <p>Review recent saved results from cache or database.</p>
-        </div>
-      </article>
-    </div>
+    <p class="section-eyebrow">Access</p>
+    <h1>Quantity Measurement</h1>
   </section>
 
   <div class="auth-card animate-right">
     <div class="auth-card__logo">
       <span class="auth-card__emoji">⚖</span>
       <h1 class="auth-card__brand">Quantity Measurement</h1>
-      <p class="auth-card__subtitle">Login or register to continue</p>
+      <p class="auth-card__subtitle">Login / Register</p>
     </div>
 
     <div class="auth-tabs">
@@ -53,8 +24,7 @@
     <form *ngIf="activeTab === 'login'" #loginForm="ngForm"
           class="auth-form animate-fade" (ngSubmit)="onLogin(loginForm)" novalidate>
       <div class="auth-form__intro">
-        <h2 class="auth-form__title">Welcome back 👋</h2>
-        <p>Sign in to continue with your saved measurement workflow.</p>
+        <h2 class="auth-form__title">Welcome back</h2>
       </div>
 
       <div class="field">
@@ -91,8 +61,7 @@
     <form *ngIf="activeTab === 'register'" #regForm="ngForm"
           class="auth-form animate-fade" (ngSubmit)="onRegister(regForm)" novalidate>
       <div class="auth-form__intro">
-        <h2 class="auth-form__title">Create account ✨</h2>
-        <p>Set up your account and start working with measurable confidence.</p>
+        <h2 class="auth-form__title">Create account</h2>
       </div>
 
       <div class="field">

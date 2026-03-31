@@ -16,10 +16,10 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.9rem 1.5rem;
-  background: rgba(15, 23, 42, 0.82);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(191, 219, 254, 0.2);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  background: rgba(3, 3, 3, 0.96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
 
   &__brand {
     display: flex;
@@ -33,7 +33,7 @@
     height: 2.5rem;
     display: grid;
     place-items: center;
-    border-radius: 14px;
+    border-radius: 6px;
     font-size: 1.25rem;
     color: white;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -76,9 +76,9 @@
     align-items: center;
     gap: 0.65rem;
     padding: 0.45rem 0.75rem;
-    border: 1px solid rgba(191, 219, 254, 0.18);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
     color: white;
 
     small {
