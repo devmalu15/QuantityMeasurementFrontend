@@ -4,14 +4,14 @@
     <div class="app-header__brand">
       <div class="app-header__logo">⚖</div>
       <div>
-        <span class="app-header__eyebrow">Smart measurement workspace</span>
-        <span class="app-header__title">Quantity Measurement Suite</span>
+        <span class="app-header__eyebrow">Quantity Measurement</span>
+        <span class="app-header__title">Measurement Dashboard</span>
       </div>
     </div>
 
     <nav class="app-header__nav">
       <p class="app-header__message" *ngIf="!auth.isLoggedIn">
-        Accurate conversions, polished workflow, any screen.
+        Convert, compare, and track units.
       </p>
 
       <ng-container *ngIf="auth.isLoggedIn">
@@ -32,6 +32,6 @@
   </main>
 
   <footer class="app-footer">
-    <p>Quantity Measurement App &copy; 2026 · Responsive precision tools for modern devices.</p>
+    <p>Quantity Measurement &copy; 2026</p>
   </footer>
 </div>

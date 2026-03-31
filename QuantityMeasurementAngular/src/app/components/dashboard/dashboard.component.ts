@@ -22,6 +22,7 @@ const UNIT_GROUPS: { [key: string]: string[] } = {
 export class DashboardComponent implements OnInit {
   unitGroups = UNIT_GROUPS;
   unit2Options: string[] = [];
+  cvtToOptions: string[] = [];
 
   opType = 'add';
   val1 = '';
@@ -48,6 +49,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.syncUnit2();
+    this.syncConversionUnits();
   }
 
   get groupCount(): number {
@@ -87,7 +89,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get conversionHelperText(): string {
-    return `Convert within ${this.getGroupForUnit(this.cvtFrom) ?? 'supported'} measurements with instant feedback.`;
+    return `Convert within ${this.getGroupForUnit(this.cvtFrom) ?? 'supported'} measurements with same-family validation.`;
   }
 
   getAllUnits(): string[] {
@@ -105,6 +107,18 @@ export class DashboardComponent implements OnInit {
     if (!this.unit2Options.includes(this.unit2)) {
       this.unit2 = this.unit2Options[0] ?? '';
     }
+  }
+
+  syncConversionUnits(): void {
+    const group = this.getGroupForUnit(this.cvtFrom);
+    this.cvtToOptions = group ? this.unitGroups[group] : [];
+
+    if (!this.cvtToOptions.includes(this.cvtTo)) {
+      this.cvtTo = this.cvtToOptions[0] ?? '';
+    }
+
+    this.cvtError = '';
+    this.cvtResult = '';
   }
 
   toLabel(unit: string): string {
@@ -168,6 +182,14 @@ export class DashboardComponent implements OnInit {
     const v = Number.parseFloat(this.cvtVal);
     if (Number.isNaN(v)) {
       this.cvtError = 'Value must be a valid number';
+      return;
+    }
+
+    const fromGroup = this.getGroupForUnit(this.cvtFrom);
+    const toGroup = this.getGroupForUnit(this.cvtTo);
+    if (!fromGroup || !toGroup || fromGroup !== toGroup) {
+      this.cvtResult = '';
+      this.cvtError = 'Please choose units from the same measurement family';
       return;
     }
 

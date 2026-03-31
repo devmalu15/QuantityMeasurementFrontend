@@ -2,17 +2,16 @@
 <div class="dashboard animate-fade">
   <section class="dashboard-hero card">
     <div class="dashboard-hero__copy">
-      <p class="section-eyebrow">Operations control center</p>
-      <h1>Precision tools for quantities, conversions, and history.</h1>
+      <p class="section-eyebrow">Quantity tools</p>
+      <h1>Work with measurements in one focused dashboard.</h1>
       <p>
-        Calculate, convert, and review measurement activity in one polished workspace
-        built to stay clean, fast, and readable on every device size.
+        Add, compare, convert, and review saved results without extra filler or clutter.
       </p>
 
       <div class="dashboard-hero__chips">
-        <span class="badge">Responsive UI</span>
-        <span class="badge">Bright + professional</span>
-        <span class="badge">Smooth interactions</span>
+        <span class="badge">Operations</span>
+        <span class="badge">Conversions</span>
+        <span class="badge">History</span>
       </div>
     </div>
 
@@ -36,9 +35,9 @@
     <section class="card tool-card animate-left delay-1">
       <div class="card-head">
         <div>
-          <p class="section-eyebrow">Calculator</p>
+          <p class="section-eyebrow">Operations</p>
           <h2 class="card-title">
-            <span class="card-title__icon">🔢</span> Arithmetic
+            <span class="card-title__icon">🔢</span> Quantity actions
           </h2>
         </div>
         <span class="status-pill">{{ formatOperation(opType) }}</span>
@@ -112,7 +111,7 @@
         <div>
           <p class="section-eyebrow">Conversion</p>
           <h2 class="card-title">
-            <span class="card-title__icon">🔄</span> Convert Unit
+            <span class="card-title__icon">🔄</span> Unit conversion
           </h2>
         </div>
         <span class="status-pill status-pill--alt">{{ currentConversionFamily }}</span>
@@ -128,7 +127,7 @@
         </div>
         <div class="field">
           <label class="field__label" for="cvtFrom">From</label>
-          <select id="cvtFrom" class="field__select" [(ngModel)]="cvtFrom">
+          <select id="cvtFrom" class="field__select" [(ngModel)]="cvtFrom" (change)="syncConversionUnits()">
             <ng-container *ngFor="let group of unitGroups | keyvalue">
               <optgroup [label]="group.key">
                 <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
@@ -139,14 +138,15 @@
       </div>
 
       <div class="field">
-        <label class="field__label" for="cvtTo">To Unit</label>
+        <label class="field__label" for="cvtTo">To unit</label>
         <select id="cvtTo" class="field__select" [(ngModel)]="cvtTo">
-          <ng-container *ngFor="let group of unitGroups | keyvalue">
-            <optgroup [label]="group.key">
-              <option *ngFor="let u of group.value" [value]="u">{{ toLabel(u) }}</option>
-            </optgroup>
-          </ng-container>
+          <option *ngFor="let u of cvtToOptions" [value]="u">{{ toLabel(u) }}</option>
         </select>
+      </div>
+
+      <div class="context-strip">
+        <span>Allowed family</span>
+        <strong>{{ currentConversionFamily }}</strong>
       </div>
 
       <button class="btn btn--primary btn--block"
@@ -167,13 +167,12 @@
   <section class="card history-card animate-fade delay-2">
     <div class="history-head">
       <div>
-        <p class="section-eyebrow">Audit trail</p>
+        <p class="section-eyebrow">Saved history</p>
         <h2 class="card-title">
           <span class="card-title__icon">📋</span> Operation History
         </h2>
         <p class="history-intro">
-          Switch between storage views and review recent measurement activity in a layout
-          optimized for both compact and wide screens.
+          Load saved measurement records from cache or database and review them on any screen size.
         </p>
       </div>
 
