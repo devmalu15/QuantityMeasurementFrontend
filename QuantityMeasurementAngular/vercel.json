@@ -1,6 +1,6 @@
 {
-  "outputDirectory": "QuantityMeasurementAngular/dist/quantity-measurement-angular/browser",
+  "outputDirectory": "dist/quantity-measurement-angular/browser",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/QuantityMeasurementAngular/index.html" }
+    { "source": "/(.*)", "destination": "src/index.html" }
   ]
 }
