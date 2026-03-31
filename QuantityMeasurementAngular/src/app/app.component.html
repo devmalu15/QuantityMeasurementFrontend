@@ -2,23 +2,36 @@
 <div class="app-shell">
   <header class="app-header">
     <div class="app-header__brand">
-      <span class="app-header__icon">⚖</span>
-      <span class="app-header__title">Quantity Measurement App</span>
+      <div class="app-header__logo">⚖</div>
+      <div>
+        <span class="app-header__eyebrow">Smart measurement workspace</span>
+        <span class="app-header__title">Quantity Measurement Suite</span>
+      </div>
     </div>
- 
-    <!-- Conditional rendering — only shown when logged in -->
-    <nav class="app-header__nav" *ngIf="auth.isLoggedIn">
-      <span class="app-header__email">{{ auth.email }}</span>
-      <button class="btn btn--ghost" (click)="logout()">Logout</button>
+
+    <nav class="app-header__nav">
+      <p class="app-header__message" *ngIf="!auth.isLoggedIn">
+        Accurate conversions, polished workflow, any screen.
+      </p>
+
+      <ng-container *ngIf="auth.isLoggedIn">
+        <div class="app-header__user">
+          <span class="app-header__status"></span>
+          <div>
+            <small>Signed in as</small>
+            <strong>{{ auth.email }}</strong>
+          </div>
+        </div>
+        <button class="btn btn--ghost" (click)="logout()">Logout</button>
+      </ng-container>
     </nav>
   </header>
- 
-  <!-- Router outlet — Auth or Dashboard renders here -->
+
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
- 
+
   <footer class="app-footer">
-    <p>Quantity Measurement App &copy; 2025 — UC20 Angular</p>
+    <p>Quantity Measurement App &copy; 2026 · Responsive precision tools for modern devices.</p>
   </footer>
 </div>

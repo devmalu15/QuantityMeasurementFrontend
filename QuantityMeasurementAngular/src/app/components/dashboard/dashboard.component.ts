@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { QuantityService } from '../../services/quantity.service';
 import { QuantityDTO, MeasurementEntity } from '../../models/quantity.models';
 
-// Unit groups — same concept as UC19 but typed
 const UNIT_GROUPS: { [key: string]: string[] } = {
   Length: ['FEET', 'INCHES', 'YARDS', 'CENTIMETERS'],
   Weight: ['KILOGRAM', 'GRAM', 'POUND'],
@@ -21,12 +20,9 @@ const UNIT_GROUPS: { [key: string]: string[] } = {
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-
-  // Unit data for dropdowns
   unitGroups = UNIT_GROUPS;
   unit2Options: string[] = [];
 
-  // Operation state
   opType = 'add';
   val1 = '';
   unit1 = 'FEET';
@@ -36,7 +32,6 @@ export class DashboardComponent implements OnInit {
   opError = '';
   opLoading = false;
 
-  // Convert state
   cvtVal = '';
   cvtFrom = 'FEET';
   cvtTo = 'INCHES';
@@ -44,19 +39,57 @@ export class DashboardComponent implements OnInit {
   cvtError = '';
   cvtLoading = false;
 
-  // History state
   history: MeasurementEntity[] = [];
   historyLoading = false;
   historyError = '';
   historyType = '';
 
-  constructor(private qty: QuantityService) { }
+  constructor(private readonly qty: QuantityService) {}
 
   ngOnInit(): void {
-    this.syncUnit2();   // lifecycle hook — runs after component initialises
+    this.syncUnit2();
   }
 
-  // Get all unit values flat for select dropdown
+  get groupCount(): number {
+    return Object.keys(this.unitGroups).length;
+  }
+
+  get totalUnitCount(): number {
+    return this.getAllUnits().length;
+  }
+
+  get currentFamily(): string {
+    return this.getGroupForUnit(this.unit1) ?? 'Mixed units';
+  }
+
+  get currentConversionFamily(): string {
+    const group = this.getGroupForUnit(this.cvtFrom);
+    return group ? `${group} units` : 'Flexible';
+  }
+
+  get activeHistoryLabel(): string {
+    if (this.historyType === 'redis') return 'Redis cache';
+    if (this.historyType === 'ef') return 'Database';
+    return 'Not selected';
+  }
+
+  get operationHelperText(): string {
+    switch (this.opType) {
+      case 'add':
+        return 'Merge compatible quantities and keep a clean, readable output.';
+      case 'subtract':
+        return 'Find the difference between two measurements in the same family.';
+      case 'divide':
+        return 'Generate a quick ratio view for quantitative comparisons.';
+      default:
+        return 'Check whether two quantities represent the same measurable value.';
+    }
+  }
+
+  get conversionHelperText(): string {
+    return `Convert within ${this.getGroupForUnit(this.cvtFrom) ?? 'supported'} measurements with instant feedback.`;
+  }
+
   getAllUnits(): string[] {
     return Object.values(this.unitGroups).flat();
   }
@@ -78,14 +111,26 @@ export class DashboardComponent implements OnInit {
     return unit.charAt(0) + unit.slice(1).toLowerCase();
   }
 
+  formatOperation(operation: string): string {
+    if (!operation) return 'Operation';
+    return operation
+      .toLowerCase()
+      .split(/[-_\s]+/)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+  }
+
   runOperation(): void {
     if (!this.val1 || !this.val2) {
-      this.opError = 'Please enter both values'; return;
+      this.opError = 'Please enter both values';
+      return;
     }
-    const v1 = parseFloat(this.val1);
-    const v2 = parseFloat(this.val2);
-    if (isNaN(v1) || isNaN(v2)) {
-      this.opError = 'Values must be valid numbers'; return;
+
+    const v1 = Number.parseFloat(this.val1);
+    const v2 = Number.parseFloat(this.val2);
+    if (Number.isNaN(v1) || Number.isNaN(v2)) {
+      this.opError = 'Values must be valid numbers';
+      return;
     }
 
     const q1: QuantityDTO = { value: v1, unit: this.unit1 };
@@ -108,16 +153,23 @@ export class DashboardComponent implements OnInit {
       this.opError = err.error ?? 'Operation failed';
     };
 
-    // Each branch subscribes independently — no union type issue
     if (this.opType === 'add') this.qty.add(req).subscribe({ next: handleResult, error: handleError });
     else if (this.opType === 'subtract') this.qty.subtract(req).subscribe({ next: handleResult, error: handleError });
     else if (this.opType === 'divide') this.qty.divide(req).subscribe({ next: handleResult, error: handleError });
     else this.qty.compare(req).subscribe({ next: handleResult, error: handleError });
   }
+
   runConvert(): void {
-    if (!this.cvtVal) { this.cvtError = 'Please enter a value'; return; }
-    const v = parseFloat(this.cvtVal);
-    if (isNaN(v)) { this.cvtError = 'Value must be a valid number'; return; }
+    if (!this.cvtVal) {
+      this.cvtError = 'Please enter a value';
+      return;
+    }
+
+    const v = Number.parseFloat(this.cvtVal);
+    if (Number.isNaN(v)) {
+      this.cvtError = 'Value must be a valid number';
+      return;
+    }
 
     this.cvtLoading = true;
     this.cvtResult = '';

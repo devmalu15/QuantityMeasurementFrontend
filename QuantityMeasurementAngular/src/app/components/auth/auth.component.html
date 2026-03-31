@@ -1,14 +1,61 @@
  
 <div class="auth-page animate-fade">
-  <div class="auth-card">
- 
-    <!-- Logo area -->
+  <section class="auth-hero animate-left">
+    <p class="section-eyebrow">Professional quantity platform</p>
+    <h1>Measure smarter with a clean, confident workspace.</h1>
+    <p class="auth-hero__text">
+      Perform fast unit calculations, polished conversions, and structured history review in a layout designed for desktop, tablet, and mobile.
+    </p>
+
+    <div class="auth-hero__highlights">
+      <article class="highlight-card">
+        <span>⚡</span>
+        <div>
+          <strong>Fast operations</strong>
+          <p>Run arithmetic and comparison workflows with minimal friction.</p>
+        </div>
+      </article>
+
+      <article class="highlight-card">
+        <span>🎯</span>
+        <div>
+          <strong>Precise conversions</strong>
+          <p>Switch between length, weight, volume, and temperature units instantly.</p>
+        </div>
+      </article>
+
+      <article class="highlight-card">
+        <span>📱</span>
+        <div>
+          <strong>Responsive design</strong>
+          <p>Enjoy the same polished experience on wide and compact screens.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="auth-hero__stats">
+      <div>
+        <strong>4</strong>
+        <span>Unit groups</span>
+      </div>
+      <div>
+        <strong>12+</strong>
+        <span>Supported units</span>
+      </div>
+      <div>
+        <strong>24/7</strong>
+        <span>Access anywhere</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="auth-card animate-right">
     <div class="auth-card__logo">
       <span class="auth-card__emoji">⚖</span>
       <h1 class="auth-card__brand">Quantity Measurement</h1>
+      <p class="auth-card__subtitle">Secure access to your precision dashboard</p>
     </div>
- 
-    <!-- Tabs -->
+
     <div class="auth-tabs">
       <button class="auth-tab"
               [class.auth-tab--active]="activeTab === 'login'"
@@ -17,16 +64,17 @@
               [class.auth-tab--active]="activeTab === 'register'"
               (click)="switchTab('register')">Register</button>
     </div>
- 
-    <!-- LOGIN FORM — conditional rendering -->
+
     <form *ngIf="activeTab === 'login'" #loginForm="ngForm"
           class="auth-form animate-fade" (ngSubmit)="onLogin(loginForm)" novalidate>
- 
-      <h2 class="auth-form__title">Welcome back 👋</h2>
- 
+      <div class="auth-form__intro">
+        <h2 class="auth-form__title">Welcome back 👋</h2>
+        <p>Sign in to continue with your saved measurement workflow.</p>
+      </div>
+
       <div class="field">
-        <label class="field__label">Email</label>
-        <input class="field__input" type="email" name="email"
+        <label class="field__label" for="login-email">Email</label>
+        <input id="login-email" class="field__input" type="email" name="email"
                [(ngModel)]="loginData.email"
                placeholder="you@example.com"
                required email #emailRef="ngModel">
@@ -34,10 +82,10 @@
           Valid email required
         </span>
       </div>
- 
+
       <div class="field">
-        <label class="field__label">Password</label>
-        <input class="field__input" type="password" name="password"
+        <label class="field__label" for="login-password">Password</label>
+        <input id="login-password" class="field__input" type="password" name="password"
                [(ngModel)]="loginData.password"
                placeholder="Password"
                required minlength="6" #pwdRef="ngModel">
@@ -45,25 +93,26 @@
           Password required
         </span>
       </div>
- 
+
       <button class="btn btn--primary btn--block"
               type="submit" [class.btn--loading]="isLoading" [disabled]="isLoading">
         <span class="btn-spinner" *ngIf="isLoading"></span>
         <span *ngIf="!isLoading">Login</span>
       </button>
- 
-      <p class="auth-form__error"   *ngIf="errorMsg">{{ errorMsg }}</p>
+
+      <p class="auth-form__error" *ngIf="errorMsg">{{ errorMsg }}</p>
     </form>
- 
-    <!-- REGISTER FORM -->
+
     <form *ngIf="activeTab === 'register'" #regForm="ngForm"
           class="auth-form animate-fade" (ngSubmit)="onRegister(regForm)" novalidate>
- 
-      <h2 class="auth-form__title">Create account ✨</h2>
- 
+      <div class="auth-form__intro">
+        <h2 class="auth-form__title">Create account ✨</h2>
+        <p>Set up your account and start working with measurable confidence.</p>
+      </div>
+
       <div class="field">
-        <label class="field__label">Email</label>
-        <input class="field__input" type="email" name="email"
+        <label class="field__label" for="register-email">Email</label>
+        <input id="register-email" class="field__input" type="email" name="email"
                [(ngModel)]="registerData.email"
                placeholder="you@example.com"
                required email #regEmailRef="ngModel">
@@ -71,10 +120,10 @@
           Valid email required
         </span>
       </div>
- 
+
       <div class="field">
-        <label class="field__label">Password</label>
-        <input class="field__input" type="password" name="password"
+        <label class="field__label" for="register-password">Password</label>
+        <input id="register-password" class="field__input" type="password" name="password"
                [(ngModel)]="registerData.password"
                placeholder="Min 6 chars · uppercase · digit · symbol"
                required minlength="6" #regPwdRef="ngModel">
@@ -82,17 +131,16 @@
           Min 6 characters required
         </span>
       </div>
- 
+
       <button class="btn btn--primary btn--block"
               type="submit" [class.btn--loading]="isLoading" [disabled]="isLoading">
         <span class="btn-spinner" *ngIf="isLoading"></span>
         <span *ngIf="!isLoading">Create account</span>
       </button>
- 
+
       <p class="auth-form__success" *ngIf="successMsg">{{ successMsg }}</p>
-      <p class="auth-form__error"   *ngIf="errorMsg">{{ errorMsg }}</p>
+      <p class="auth-form__error" *ngIf="errorMsg">{{ errorMsg }}</p>
     </form>
- 
   </div>
 </div>
 
