@@ -2,7 +2,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { QuantityService } from '../../services/quantity.service';
+import { AuthService } from '../../services/auth.service';
 import { QuantityDTO, MeasurementEntity } from '../../models/quantity.models';
 
 const UNIT_GROUPS: { [key: string]: string[] } = {
@@ -45,7 +47,15 @@ export class DashboardComponent implements OnInit {
   historyError = '';
   historyType = '';
 
-  constructor(private readonly qty: QuantityService) {}
+  constructor(
+    private readonly qty: QuantityService,
+    private readonly auth: AuthService,
+    private readonly router: Router
+  ) {}
+
+  get isAuthenticated(): boolean {
+    return this.auth.isLoggedIn;
+  }
 
   ngOnInit(): void {
     this.syncUnit2();
@@ -211,6 +221,17 @@ export class DashboardComponent implements OnInit {
   }
 
   loadHistory(type: 'redis' | 'ef'): void {
+    if (type === 'ef' && !this.isAuthenticated) {
+      this.historyError = 'Please login or register to access database history.';
+      this.history = [];
+      this.historyType = '';
+      this.historyLoading = false;
+      this.router.navigate(['/auth'], {
+        queryParams: { returnUrl: '/dashboard' }
+      });
+      return;
+    }
+
     this.historyLoading = true;
     this.historyError = '';
     this.historyType = type;

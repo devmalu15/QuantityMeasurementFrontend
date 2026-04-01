@@ -139,10 +139,15 @@
           Cache
         </button>
         <button class="btn btn--secondary" (click)="loadHistory('ef')"
-                [class.active]="historyType === 'ef'">
+                [class.active]="historyType === 'ef'"
+                [disabled]="!isAuthenticated"
+                title="Register or log in to access database history">
           Database
         </button>
       </div>
+      <p class="info-msg" *ngIf="!isAuthenticated">
+        Database history is restricted. Please login/register first.
+      </p>
     </div>
 
     <div class="spinner" *ngIf="historyLoading"></div>

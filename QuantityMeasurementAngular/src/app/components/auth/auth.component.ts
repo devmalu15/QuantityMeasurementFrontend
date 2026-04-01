@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
  
 @Component({
@@ -22,7 +22,11 @@ export class AuthComponent {
   loginData    = { email: '', password: '' };
   registerData = { email: '', password: '' };
  
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
  
   switchTab(tab: 'login' | 'register'): void {
     this.activeTab = tab;
@@ -35,11 +39,13 @@ export class AuthComponent {
  
     this.isLoading = true;
     this.errorMsg  = '';
+
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
  
     this.auth.login(this.loginData).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigateByUrl(returnUrl);
       },
       error: (err) => {
         this.isLoading = false;
