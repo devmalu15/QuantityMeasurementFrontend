@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './auth.component.html',
   styleUrl:    './auth.component.scss'
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit {
   // State
   activeTab: 'login' | 'register' = 'login';
   isLoading = false;
@@ -21,31 +21,45 @@ export class AuthComponent {
   // Form models
   loginData    = { email: '', password: '' };
   registerData = { email: '', password: '' };
- 
+
+  private returnUrl = '/dashboard';
+
   constructor(
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
- 
+
   switchTab(tab: 'login' | 'register'): void {
     this.activeTab = tab;
-    this.errorMsg  = '';
+    this.errorMsg = '';
     this.successMsg = '';
   }
- 
+
+  ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    if (tab === 'register') {
+      this.activeTab = 'register';
+    } else {
+      this.activeTab = 'login';
+    }
+
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (returnUrl) {
+      this.returnUrl = returnUrl;
+    }
+  }
+
   onLogin(form: NgForm): void {
     if (form.invalid) { form.form.markAllAsTouched(); return; }
  
     this.isLoading = true;
     this.errorMsg  = '';
 
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
- 
     this.auth.login(this.loginData).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigateByUrl(returnUrl);
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (err) => {
         this.isLoading = false;

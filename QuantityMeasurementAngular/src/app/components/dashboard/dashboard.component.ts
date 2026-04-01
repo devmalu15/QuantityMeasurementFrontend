@@ -47,6 +47,8 @@ export class DashboardComponent implements OnInit {
   historyError = '';
   historyType = '';
 
+  showGuestDbPrompt = false;
+
   constructor(
     private readonly qty: QuantityService,
     private readonly auth: AuthService,
@@ -57,7 +59,15 @@ export class DashboardComponent implements OnInit {
     return this.auth.isLoggedIn;
   }
 
+  get isGuest(): boolean {
+    return this.auth.isGuest;
+  }
+
   ngOnInit(): void {
+    if (!this.isAuthenticated && !this.isGuest) {
+      this.router.navigate(['/landing']);
+      return;
+    }
     this.syncUnit2();
     this.syncConversionUnits();
   }
@@ -222,13 +232,15 @@ export class DashboardComponent implements OnInit {
 
   loadHistory(type: 'redis' | 'ef'): void {
     if (type === 'ef' && !this.isAuthenticated) {
-      this.historyError = 'Please login or register to access database history.';
+      this.historyError = 'Database history requires login. Please login/register first.';
       this.history = [];
       this.historyType = '';
       this.historyLoading = false;
-      this.router.navigate(['/auth'], {
-        queryParams: { returnUrl: '/dashboard' }
-      });
+      if (this.isGuest) {
+        this.showGuestDbPrompt = true;
+      } else {
+        this.router.navigate(['/landing']);
+      }
       return;
     }
 
@@ -247,5 +259,14 @@ export class DashboardComponent implements OnInit {
         this.historyError = err.error ?? 'Failed to load history';
       }
     });
+  }
+
+  closeGuestDbPrompt(): void {
+    this.showGuestDbPrompt = false;
+  }
+
+  goAuthFromGuest(): void {
+    this.showGuestDbPrompt = false;
+    this.router.navigate(['/landing']);
   }
 }

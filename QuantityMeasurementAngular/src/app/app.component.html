@@ -17,6 +17,17 @@
         </div>
         <button class="btn btn--ghost" (click)="logout()">Logout</button>
       </ng-container>
+
+      <ng-container *ngIf="!auth.isLoggedIn && auth.isGuest">
+        <div class="app-header__user">
+          <span class="app-header__status"></span>
+          <div>
+            <small>Guest mode</small>
+            <strong>Limited access</strong>
+          </div>
+        </div>
+        <button class="btn btn--ghost" (click)="logout()">Exit Guest</button>
+      </ng-container>
     </nav>
   </header>
 

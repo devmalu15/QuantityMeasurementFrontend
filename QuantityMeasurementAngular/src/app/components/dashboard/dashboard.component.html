@@ -140,14 +140,28 @@
         </button>
         <button class="btn btn--secondary" (click)="loadHistory('ef')"
                 [class.active]="historyType === 'ef'"
-                [disabled]="!isAuthenticated"
+                [disabled]="isGuest || !isAuthenticated"
                 title="Register or log in to access database history">
           Database
         </button>
       </div>
-      <p class="info-msg" *ngIf="!isAuthenticated">
-        Database history is restricted. Please login/register first.
+      <p class="info-msg" *ngIf="isGuest">
+        You are in guest mode. Database history is locked. Click the button again to get a login/register invitation.
       </p>
+      <p class="info-msg" *ngIf="!isAuthenticated && !isGuest">
+        Please start from the landing page to choose login/register/guest.
+      </p>
+
+      <div class="modal-overlay" *ngIf="showGuestDbPrompt">
+        <div class="modal-box">
+          <h3>Database access requires login</h3>
+          <p>Get full database history access by logging in or registering.</p>
+          <div class="modal-btns">
+            <button class="btn btn--primary" (click)="goAuthFromGuest()">Go to Landing</button>
+            <button class="btn btn--ghost" (click)="closeGuestDbPrompt()">Continue as Guest</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="spinner" *ngIf="historyLoading"></div>

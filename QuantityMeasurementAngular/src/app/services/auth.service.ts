@@ -12,6 +12,7 @@ export class AuthService {
  
   // BehaviorSubject — holds current logged-in state, components subscribe to changes
   private loggedIn$ = new BehaviorSubject<boolean>(this.hasToken());
+  private guest$ = new BehaviorSubject<boolean>(this.isGuestToken());
  
   constructor(private http: HttpClient) {}
  
@@ -20,8 +21,30 @@ export class AuthService {
     return this.loggedIn$.asObservable();
   }
 
+  get isGuest$(): Observable<boolean> {
+    return this.guest$.asObservable();
+  }
+
   get isLoggedIn(): boolean {
     return this.hasToken();
+  }
+
+  get isGuest(): boolean {
+    return this.isGuestToken();
+  }
+
+  startGuest(): void {
+    sessionStorage.setItem('qma_guest', 'true');
+    this.guest$.next(true);
+  }
+
+  clearGuest(): void {
+    sessionStorage.removeItem('qma_guest');
+    this.guest$.next(false);
+  }
+
+  private isGuestToken(): boolean {
+    return !!sessionStorage.getItem('qma_guest');
   }
  
   get token(): string | null {
@@ -47,6 +70,7 @@ export class AuthService {
         sessionStorage.setItem(this.TOKEN_KEY, res.token);
         sessionStorage.setItem(this.EMAIL_KEY, res.email);
         this.loggedIn$.next(true);   // notify all subscribers
+        this.clearGuest();
       })
     );
   }
@@ -55,6 +79,7 @@ export class AuthService {
     sessionStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.EMAIL_KEY);
     this.loggedIn$.next(false);
+    this.clearGuest();
   }
  
   private hasToken(): boolean {
