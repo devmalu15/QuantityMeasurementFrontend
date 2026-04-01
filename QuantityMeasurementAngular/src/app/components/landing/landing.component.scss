@@ -1,6 +1,8 @@
 .landing { padding: 48px 20px; display: grid; place-items: center; min-height: calc(100vh - 90px); }
-.welcome-card { width: min(560px, 90vw); padding: 28px; border-radius: 14px; box-shadow: 0 16px 32px rgba(0,0,0,0.08); background: var(--card-bg, #fff); }
-.card-head h1 { margin: 0; font-size: 1.9rem; }
-.card-head p { margin: 8px 0 22px; color: #666; }
+.welcome-card { width: min(560px, 90vw); padding: 28px; border-radius: 14px; box-shadow: 0 16px 32px rgba(0,0,0,0.35); background: linear-gradient(180deg, rgba(12, 22, 40, 0.98), rgba(8, 13, 30, 0.98)); border: 1px solid rgba(59, 130, 246, 0.18); }
+.card-head h1 { margin: 0; font-size: 1.9rem; color: #f8fafc; }
+.card-head p { margin: 8px 0 22px; color: #cbd5e1; }
 .landing-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.hint { margin-top: 16px; color: #777; font-size: 0.9rem; }
+.hint { margin-top: 16px; color: #9ca3af; font-size: 0.9rem; }
+.landing-actions .btn { min-width: 150px; }
+
