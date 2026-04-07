@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-login-success',
@@ -15,19 +16,21 @@ import { AuthService } from '../auth.service';
   `
 })
 export class LoginSuccess implements OnInit {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private router     = inject(Router);
   private authService = inject(AuthService);
+  private platformId  = inject(PLATFORM_ID);
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      const token = params['token'];
+    if (isPlatformBrowser(this.platformId)) {
+      const params = new URLSearchParams(window.location.search);
+      const token  = params.get('token');
+
       if (token) {
         this.authService.loginWithToken(token);
         this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/auth']);
       }
-    });
+    }
   }
 }
