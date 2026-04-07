@@ -93,6 +93,29 @@ export class AuthService {
     this.clearGuest();
   }
  
+  loginWithGoogle(): void {
+    if (this.isBrowser) {
+      window.location.href = `${this.API_URL}/api/auth/google-login`;
+    }
+  }
+
+  loginWithToken(token: string): void {
+    if (this.isBrowser) {
+      sessionStorage.setItem(this.TOKEN_KEY, token);
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const email = payload.email || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+        if (email) {
+          sessionStorage.setItem(this.EMAIL_KEY, email);
+        }
+      } catch (e) {
+        console.error('Error parsing token', e);
+      }
+    }
+    this.loggedIn$.next(true);
+    this.clearGuest();
+  }
+
   private hasToken(): boolean {
     if (!this.isBrowser) return false;
     return !!sessionStorage.getItem(this.TOKEN_KEY);
