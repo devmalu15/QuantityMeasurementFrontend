@@ -94,10 +94,10 @@ export class AuthService {
   }
  
   loginWithGoogle(): void {
-    if (this.isBrowser) {
-      window.location.href = `${this.API_URL}/api/auth/google-login`;
-    }
+  if (this.isBrowser) {
+    window.location.href = `https://qma-auth.runasp.net/api/auth/google-login`;
   }
+}
 
   loginWithToken(token: string): void {
     if (this.isBrowser) {
