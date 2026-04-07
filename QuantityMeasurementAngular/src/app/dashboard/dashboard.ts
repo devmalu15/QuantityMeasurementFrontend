@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { animate, stagger } from 'motion';
 import { QuantityService } from '../quantity.service';
 import { AuthService } from '../auth.service';
 import { MeasurementEntity, QuantityDTO } from '../models';
@@ -438,12 +437,26 @@ export class Dashboard implements OnInit, AfterViewInit {
   constructor() {
     // Effect to animate tool switching
     effect(() => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       this.activeTool(); // Track dependency
       const el = this.toolContentEl()?.nativeElement;
       if (el) {
-        animate(el, { opacity: [0, 1], x: [20, 0] }, { duration: 0.5, ease: [0.22, 1, 0.36, 1] });
+        this.animateWithMotion((animate) => {
+          animate(el, { opacity: [0, 1], x: [20, 0] }, { duration: 0.5, ease: [0.22, 1, 0.36, 1] });
+        });
       }
     });
+  }
+
+  private async animateWithMotion(callback: (animate: any, stagger: any) => void) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const { animate, stagger } = await import('motion');
+    callback(animate, stagger);
   }
 
   ngOnInit() {
@@ -455,20 +468,26 @@ export class Dashboard implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     // Entrance animations
-    if (this.headerEl()) {
-      animate(this.headerEl()!.nativeElement, { opacity: [0, 1], y: [-20, 0] }, { duration: 0.8 });
-    }
+    this.animateWithMotion((animate, stagger) => {
+      if (this.headerEl()) {
+        animate(this.headerEl()!.nativeElement, { opacity: [0, 1], y: [-20, 0] }, { duration: 0.8 });
+      }
 
-    if (this.sidebarEl()) {
-      const children = this.sidebarEl()!.nativeElement.children;
-      animate(Array.from(children), { opacity: [0, 1], x: [-30, 0] }, { delay: stagger(0.1), duration: 0.8 });
-    }
+      if (this.sidebarEl()) {
+        const children = this.sidebarEl()!.nativeElement.children;
+        animate(Array.from(children), { opacity: [0, 1], x: [-30, 0] }, { delay: stagger(0.1), duration: 0.8 });
+      }
 
-    if (this.workspaceEl()) {
-      const sections = this.workspaceEl()!.nativeElement.querySelectorAll('section');
-      animate(Array.from(sections), { opacity: [0, 1], y: [30, 0] }, { delay: stagger(0.15), duration: 0.8 });
-    }
+      if (this.workspaceEl()) {
+        const sections = this.workspaceEl()!.nativeElement.querySelectorAll('section');
+        animate(Array.from(sections), { opacity: [0, 1], y: [30, 0] }, { delay: stagger(0.15), duration: 0.8 });
+      }
+    });
   }
 
   private getGroupForUnit(unit: string): string | null {
