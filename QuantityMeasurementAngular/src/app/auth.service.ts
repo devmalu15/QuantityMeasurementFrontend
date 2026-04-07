@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../models/quantity.models';
+import { AuthResponse, LoginRequest, RegisterRequest } from './models';
  
 @Injectable({ providedIn: 'root' })
 export class AuthService {
- 
   private readonly TOKEN_KEY = 'qma_token';
   private readonly EMAIL_KEY = 'qma_email';
+  private readonly GUEST_KEY = 'qma_guest';
+  private readonly API_URL = 'https://qma-gateway.runasp.net';
  
-  // BehaviorSubject — holds current logged-in state, components subscribe to changes
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
+
   private loggedIn$ = new BehaviorSubject<boolean>(this.hasToken());
   private guest$ = new BehaviorSubject<boolean>(this.isGuestToken());
  
-  constructor(private http: HttpClient) {}
- 
-  // Observable that components can subscribe to for live auth state
   get isLoggedIn$(): Observable<boolean> {
     return this.loggedIn$.asObservable();
   }
@@ -34,55 +35,66 @@ export class AuthService {
   }
 
   startGuest(): void {
-    sessionStorage.setItem('qma_guest', 'true');
+    if (this.isBrowser) {
+      sessionStorage.setItem(this.GUEST_KEY, 'true');
+    }
     this.guest$.next(true);
   }
 
   clearGuest(): void {
-    sessionStorage.removeItem('qma_guest');
+    if (this.isBrowser) {
+      sessionStorage.removeItem(this.GUEST_KEY);
+    }
     this.guest$.next(false);
   }
 
   private isGuestToken(): boolean {
-    return !!sessionStorage.getItem('qma_guest');
+    if (!this.isBrowser) return false;
+    return !!sessionStorage.getItem(this.GUEST_KEY);
   }
  
   get token(): string | null {
+    if (!this.isBrowser) return null;
     return sessionStorage.getItem(this.TOKEN_KEY);
   }
  
   get email(): string | null {
+    if (!this.isBrowser) return null;
     return sessionStorage.getItem(this.EMAIL_KEY);
   }
  
   register(data: RegisterRequest): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
-      `${environment.apiUrl}/api/auth/register`, data
+      `${this.API_URL}/api/auth/register`, data
     );
   }
  
   login(data: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
-      `${environment.apiUrl}/api/auth/login`, data
+      `${this.API_URL}/api/auth/login`, data
     ).pipe(
-      // tap — side effect: store token when login succeeds
       tap(res => {
-        sessionStorage.setItem(this.TOKEN_KEY, res.token);
-        sessionStorage.setItem(this.EMAIL_KEY, res.email);
-        this.loggedIn$.next(true);   // notify all subscribers
+        if (this.isBrowser) {
+          sessionStorage.setItem(this.TOKEN_KEY, res.token);
+          sessionStorage.setItem(this.EMAIL_KEY, res.email);
+        }
+        this.loggedIn$.next(true);
         this.clearGuest();
       })
     );
   }
  
   logout(): void {
-    sessionStorage.removeItem(this.TOKEN_KEY);
-    sessionStorage.removeItem(this.EMAIL_KEY);
+    if (this.isBrowser) {
+      sessionStorage.removeItem(this.TOKEN_KEY);
+      sessionStorage.removeItem(this.EMAIL_KEY);
+    }
     this.loggedIn$.next(false);
     this.clearGuest();
   }
  
   private hasToken(): boolean {
+    if (!this.isBrowser) return false;
     return !!sessionStorage.getItem(this.TOKEN_KEY);
   }
 }

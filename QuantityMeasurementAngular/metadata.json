@@ -1,0 +1,5 @@
+{
+  "name": "Quantity Measurement",
+  "description": "A minimalist, modern tool for converting and calculating quantities across length, weight, volume, and temperature.",
+  "requestFramePermissions": []
+}

@@ -1,16 +1,18 @@
- 
 import { Routes } from '@angular/router';
-import { authGuard }  from './guards/auth.guard';
-import { guestGuard } from './guards/guest.guard';
- 
+
 export const routes: Routes = [
-  { path: '',        redirectTo: 'landing', pathMatch: 'full' },
-  { path: 'landing', loadComponent: () => import('./components/landing/landing.component')
-                         .then(m => m.LandingComponent) },
-  { path: 'auth',      loadComponent: () => import('./components/auth/auth.component')
-                         .then(m => m.AuthComponent),
-                       canActivate: [guestGuard] },
-  { path: 'dashboard', loadComponent: () => import('./components/dashboard/dashboard.component')
-                         .then(m => m.DashboardComponent) },
-  { path: '**',      redirectTo: 'landing' }
+  { path: '', redirectTo: 'landing', pathMatch: 'full' },
+  { 
+    path: 'landing', 
+    loadComponent: () => import('./landing/landing').then(m => m.Landing) 
+  },
+  { 
+    path: 'auth', 
+    loadComponent: () => import('./auth/auth').then(m => m.Auth) 
+  },
+  { 
+    path: 'dashboard', 
+    loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard) 
+  },
+  { path: '**', redirectTo: 'landing' }
 ];

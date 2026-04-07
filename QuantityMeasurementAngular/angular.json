@@ -1,30 +1,27 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "schematicCollections": [
+      "angular-eslint"
+    ],
+    "analytics": false
+  },
   "newProjectRoot": "projects",
   "projects": {
-    "QuantityMeasurementAngular": {
+    "app": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/quantity-measurement-angular",
-            "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -32,9 +29,13 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
-            "scripts": []
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
@@ -46,8 +47,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kB",
-                  "maximumError": "10kB"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -61,45 +62,30 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "QuantityMeasurementAngular:build:production"
+              "buildTarget": "app:build:production"
             },
             "development": {
-              "buildTarget": "QuantityMeasurementAngular:build:development"
+              "buildTarget": "app:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
-        },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": []
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     }
-  },
-  "cli": {
-    "analytics": "65ed7fbe-cfa5-446c-8a35-f81984eb40d9"
   }
 }
