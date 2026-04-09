@@ -24,7 +24,7 @@ import { AuthService } from '../auth.service';
         </h1>
         
         <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          A minimalist, professional tool for converting and calculating quantities across length, weight, volume, and temperature.
+          
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">

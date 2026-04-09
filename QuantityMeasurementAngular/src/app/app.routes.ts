@@ -8,11 +8,11 @@ export const routes: Routes = [
   },
   { 
     path: 'auth', 
-    loadComponent: () => import('./auth/auth').then(m => m.Auth) 
+    loadComponent: () => import('./dashboard/auth/auth').then(m => m.Auth) 
   },
   { 
     path: 'login-success', 
-    loadComponent: () => import('./auth/login-success').then(m => m.LoginSuccess) 
+    loadComponent: () => import('./dashboard/auth/login-success').then(m => m.LoginSuccess) 
   },
   { 
     path: 'dashboard', 
